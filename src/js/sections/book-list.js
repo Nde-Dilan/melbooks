@@ -386,6 +386,6 @@ export async function initBookList() {
     const message = `Hello, I am interested in buying: ${cartDetails} for a total of XAF ${totalPrice.toFixed(
       2
     )}.`;
-    window.location.href = `https://wa.me/?text=${encodeURIComponent(message)}`;
+    window.location.href = `https://wa.me/237651293991/?text=${encodeURIComponent(message)}`;
   });
 }

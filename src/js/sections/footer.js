@@ -20,9 +20,11 @@ export function renderFooter() {
                                                                 <li>@books_and_bloom_cmr_ for fiction lovers</li>
                                                                 <li>🚚 Swift Nationwide Delivery</li>
                                                                 <li>
-                                                                        <a href="https://wa.me/message/JQAQVTKNOFDHG1" target="_blank" class="text-white text-decoration-none">
+                                                                        <a href="https://wa.me/237651293991?text=${encodeURIComponent("Hello MelBooks! I came across your website and I'm intrigued by your collection of books. What recommendations do you have for a captivating read in fiction or non-fiction?")}" target="_blank" class="text-white text-decoration-none">
                                                                                 <i class="fab fa-whatsapp"></i> Chat with us
                                                                         </a>
+
+                                                                        
                                                                 </li>
                                                         </ul>
                                                 </div>
