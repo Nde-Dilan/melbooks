@@ -1,0 +1,90 @@
+#header {
+    transition: padding 0.3s ease;
+}
+#header .menu-list {
+    transition: all 0.3s ease;
+}
+#header .hamburger {
+    display: flex;
+    flex-direction: column;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    min-height: 44px; /* Touch-friendly */
+    min-width: 44px;
+}
+#header .hamburger .bar {
+    width: 25px;
+    height: 3px;
+    background: white;
+    margin: 3px 0;
+    transition: 0.3s;
+}
+#header .hamburger:hover .bar,
+#header .hamburger[aria-expanded="true"] .bar {
+    background: var(--primary-orange);
+}
+#header .hamburger[aria-expanded="true"] .bar:nth-child(1) {
+    transform: rotate(-45deg) translate(-5px, 5px);
+}
+#header .hamburger[aria-expanded="true"] .bar:nth-child(2) {
+    opacity: 0;
+}
+#header .hamburger[aria-expanded="true"] .bar:nth-child(3) {
+    transform: rotate(45deg) translate(-5px, -5px);
+}
+
+/* Mobile Menu */
+#mobile-navbar {
+    background: rgba(0, 0, 0, 0.9);
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+}
+.menu-list-mobile .btn {
+    min-height: 44px; /* Touch-friendly */
+}
+
+/* Mini-Cart Preview */
+.mini-cart-preview {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    border-radius: 10px;
+    border: none;
+}
+.mini-cart-preview .dropdown-item {
+    transition: background 0.2s;
+}
+.mini-cart-preview .dropdown-item:hover {
+    background-color: var(--light-bg);
+}
+
+/* Mobile Adjustments */
+@media (max-width: 768px) {
+    #header {
+        padding: 0.5rem 0;
+    }
+    #header .btn {
+        font-size: 0.9rem;
+        padding: 0.375rem 0.5rem;
+        min-height: 44px;
+    }
+    #header .social-links .btn {
+        padding: 6px;
+        min-width: 44px;
+    }
+    .mini-cart-preview {
+        width: 250px;
+    }
+    /* Ensure sticky doesn't hide content */
+    body {
+        padding-top: 7px; /* Adjust based on header height */
+    }
+}
+@media (max-width: 576px) {
+    #header .img-fluid {
+        max-height: 35px;
+    }
+    #header .col-4 {
+        padding: 0 5px;
+    }
+}

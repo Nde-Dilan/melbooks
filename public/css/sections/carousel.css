@@ -1,0 +1,96 @@
+.carousel-section {
+    max-width: 1200px; /* Limit overall width */
+    margin: 0 auto; /* Center the carousel */
+    padding: 20px 0;
+}
+.carousel-section .main-slider {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    height: 400px; /* Reduced height for compactness */
+    transition: all 0.3s ease; /* Smoother transitions */
+}
+.carousel-section .slider-item {
+    min-width: 100%;
+    opacity: 0;
+    transition: opacity 0.4s ease, transform 0.4s ease; /* Added transform for subtle slide effect */
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translateX(0);
+}
+.carousel-section .slider-item.active {
+    opacity: 1;
+    position: relative;
+    z-index: 1;
+}
+.carousel-section .slick-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0,0,0,0.7);
+    border: none;
+    color: white;
+    padding: 8px; /* Smaller padding */
+    cursor: pointer;
+    z-index: 10;
+    border-radius: 50%;
+    transition: background 0.2s ease;
+}
+.carousel-section .slick-arrow:hover {
+    background: rgba(0,0,0,0.9);
+}
+.carousel-section .prev { left: 10px; }
+.carousel-section .next { right: 10px; }
+.carousel-indicators {
+    text-align: center;
+    margin-top: 15px;
+}
+.indicator {
+    width: 10px; /* Smaller dots */
+    height: 10px;
+    border-radius: 50%;
+    border: none;
+    background: #ccc;
+    margin: 0 4px; /* Closer spacing */
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+.indicator.active {
+    background: #F4A259;
+    transform: scale(1.2); /* Subtle active state */
+}
+.indicator:hover {
+    background: #d4a049;
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+    .carousel-section .main-slider {
+        height: 300px; /* Shorter on mobile */
+    }
+    .carousel-section .banner-content h2 {
+        font-size: 1.5rem; /* Smaller title */
+    }
+    .carousel-section .banner-content p {
+        font-size: 0.9rem;
+    }
+    .carousel-section .slick-arrow {
+        padding: 6px; /* Even smaller */
+    }
+    .carousel-indicators {
+        margin-top: 10px;
+    }
+    .indicator {
+        width: 8px;
+        height: 8px;
+    }
+}
+@media (max-width: 576px) {
+    .carousel-section {
+        padding: 10px 0;
+    }
+    .carousel-section .main-slider {
+        height: 250px; /* Compact for small screens */
+    }
+}

@@ -1,0 +1,86 @@
+#book-list .card {
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+#book-list .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+#book-list .nav-tabs .nav-link {
+    border-radius: 10px 10px 0 0;
+    min-height: 44px; /* Touch-friendly */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#book-list .nav-tabs .nav-link.active {
+    background-color: var(--primary-orange);
+    color: white;
+}
+#book-list #search-input {
+    border-radius: 20px;
+    min-height: 44px; /* Touch-friendly */
+}
+#book-list #cart-summary {
+    border-radius: 10px;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    #book-list .nav-tabs {
+        flex-wrap: wrap; /* Allow wrapping */
+    }
+    #book-list .nav-tabs .nav-item {
+        flex: 1 1 50%; /* 2 tabs per row on medium */
+        text-align: center;
+    }
+    #book-list .col-md-6 {
+        margin-bottom: 20px;
+    }
+    #book-list .card .btn {
+        min-height: 44px; /* Ensure buttons are touchable */
+        font-size: 1rem;
+    }
+}
+@media (max-width: 576px) {
+    #book-list .nav-tabs .nav-item {
+        flex: 1 1 100%; /* 1 tab per row on small */
+    }
+    #book-list .col-12 {
+        margin-bottom: 20px;
+    }
+    #book-list .card-title {
+        font-size: 1.1rem; /* Slightly larger for readability */
+    }
+    #book-list .card-text {
+        font-size: 0.9rem;
+    }
+    #book-list .d-flex.justify-content-between {
+        flex-direction: column; /* Stack title and search on small screens */
+        align-items: stretch;
+    }
+    #book-list .d-flex.justify-content-between h2 {
+        margin-bottom: 10px;
+    }
+}
+.product-style button.add-to-cart:hover {
+    background-color: #2E3A23 !important;
+    color: var(--light-bg);
+}
+
+#cart-toggle {
+    transition: transform 0.2s;
+}
+#cart-toggle:hover {
+    transform: scale(1.1);
+}
+.offcanvas {
+    width: 350px !important;
+}
+#cart-items .btn {
+    font-size: 0.8rem;
+}
+@media (max-width: 768px) {
+    .offcanvas {
+        width: 100% !important;
+    }
+}
