@@ -17,9 +17,16 @@ interface CartContextType {
 
 export const CartContext = createContext<CartContextType | undefined>(undefined);
 
+type ToastInfo = {
+    id: 'added' | 'removed' | 'cleared';
+    title: string;
+    description: string;
+}
+
 export function CartProvider({ children }: { children: ReactNode }) {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const { toast } = useToast();
+  const [lastToast, setLastToast] = useState<ToastInfo | null>(null);
 
   useEffect(() => {
     try {
@@ -31,6 +38,16 @@ export function CartProvider({ children }: { children: ReactNode }) {
       console.error("Failed to parse cart from localStorage", error);
     }
   }, []);
+
+  useEffect(() => {
+    if (lastToast) {
+        toast({
+            title: lastToast.title,
+            description: lastToast.description,
+        });
+        setLastToast(null);
+    }
+  }, [lastToast, toast]);
 
   const updateLocalStorage = useCallback((items: CartItem[]) => {
     try {
@@ -52,7 +69,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
         newItems = [...prevItems, { ...book, quantity: 1 }];
       }
       updateLocalStorage(newItems);
-      toast({
+      setLastToast({
+        id: 'added',
         title: "Added to cart",
         description: `${book.title} has been added to your cart.`,
       });
@@ -62,11 +80,15 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const removeFromCart = (slug: string) => {
     setCartItems(prevItems => {
+      const itemToRemove = prevItems.find(item => item.slug === slug);
+      if (!itemToRemove) return prevItems;
+
       const newItems = prevItems.filter(item => item.slug !== slug);
       updateLocalStorage(newItems);
-      toast({
+      setLastToast({
+        id: 'removed',
         title: "Removed from cart",
-        description: "The item has been removed from your cart.",
+        description: `"${itemToRemove.title}" has been removed from your cart.`,
       });
       return newItems;
     });
@@ -75,8 +97,16 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const updateQuantity = (slug: string, quantity: number) => {
     setCartItems(prevItems => {
       if (quantity <= 0) {
+        const itemToRemove = prevItems.find(item => item.slug === slug);
         const newItems = prevItems.filter(item => item.slug !== slug);
         updateLocalStorage(newItems);
+        if (itemToRemove) {
+            setLastToast({
+                id: 'removed',
+                title: "Removed from cart",
+                description: `"${itemToRemove.title}" has been removed from your cart.`,
+            });
+        }
         return newItems;
       }
       const newItems = prevItems.map(item =>
@@ -88,11 +118,15 @@ export function CartProvider({ children }: { children: ReactNode }) {
   };
 
   const clearCart = () => {
-    setCartItems([]);
-    updateLocalStorage([]);
-    toast({
-        title: "Cart cleared",
-        description: "Your shopping cart has been emptied.",
+    setCartItems(prevItems => {
+        if (prevItems.length === 0) return prevItems;
+        updateLocalStorage([]);
+        setLastToast({
+            id: 'cleared',
+            title: "Cart cleared",
+            description: "Your shopping cart has been emptied.",
+        });
+        return [];
     });
   };
 

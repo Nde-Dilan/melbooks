@@ -14,9 +14,17 @@ interface WishlistContextType {
 
 export const WishlistContext = createContext<WishlistContextType | undefined>(undefined);
 
+type ToastInfo = {
+    id: 'added' | 'removed' | 'already-in';
+    title: string;
+    description: string;
+    variant?: 'default' | 'destructive';
+}
+
 export function WishlistProvider({ children }: { children: ReactNode }) {
   const [wishlistItems, setWishlistItems] = useState<WishlistItem[]>([]);
   const { toast } = useToast();
+  const [lastToast, setLastToast] = useState<ToastInfo | null>(null);
   
   useEffect(() => {
     try {
@@ -29,6 +37,17 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
+  useEffect(() => {
+    if (lastToast) {
+        toast({
+            title: lastToast.title,
+            description: lastToast.description,
+            variant: lastToast.variant,
+        });
+        setLastToast(null);
+    }
+  }, [lastToast, toast]);
+
   const updateLocalStorage = useCallback((items: WishlistItem[]) => {
     try {
       localStorage.setItem('wishlist', JSON.stringify(items));
@@ -40,7 +59,8 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
   const addToWishlist = (book: Book) => {
     setWishlistItems(prevItems => {
       if (prevItems.find(item => item.slug === book.slug)) {
-        toast({
+        setLastToast({
+            id: 'already-in',
             title: "Already in wishlist",
             description: `${book.title} is already in your wishlist.`,
             variant: "default"
@@ -49,7 +69,8 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
       }
       const newItems = [...prevItems, book];
       updateLocalStorage(newItems);
-      toast({
+      setLastToast({
+        id: 'added',
         title: "Added to wishlist",
         description: `${book.title} has been added to your wishlist.`,
       });
@@ -59,11 +80,15 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
 
   const removeFromWishlist = (slug: string) => {
     setWishlistItems(prevItems => {
+      const itemToRemove = prevItems.find(item => item.slug === slug);
+      if (!itemToRemove) return prevItems;
+
       const newItems = prevItems.filter(item => item.slug !== slug);
       updateLocalStorage(newItems);
-      toast({
+      setLastToast({
+        id: 'removed',
         title: "Removed from wishlist",
-        description: "The item has been removed from your wishlist.",
+        description: `"${itemToRemove.title}" has been removed from your wishlist.`,
       });
       return newItems;
     });
