@@ -21,7 +21,7 @@ export function HeroSection() {
             )}
             <div className="relative z-20 text-center p-4">
                 <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight leading-tight mb-4 font-headline drop-shadow-lg">
-                    Find Your Next Chapter
+                    Your Trusted Bookstore
                 </h1>
                 <p className="text-lg md:text-xl max-w-2xl mx-auto text-neutral-200 drop-shadow-md">
                     Discover captivating stories and knowledge from around the world. Your literary adventure starts here.

@@ -20,7 +20,7 @@ export function CartSidebar() {
   const handleWhatsAppCheckout = () => {
     if (cartItems.length === 0) return;
 
-    let message = "Hello ChapterLink, I would like to order the following books:\n\n";
+    let message = "Hello MelBooks, I would like to order the following books:\n\n";
     cartItems.forEach(item => {
       message += `${item.title} (x${item.quantity}) - ${formatCurrency(item.price * item.quantity)}\n`;
     });

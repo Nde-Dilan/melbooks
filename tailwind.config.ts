@@ -18,13 +18,16 @@ export default {
     },
     extend: {
       fontFamily: {
-        body: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
-        headline: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        body: ['Raleway', 'sans-serif'],
+        headline: ['Playfair Display', 'serif'],
         code: ['monospace'],
       },
       colors: {
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
+        'dark-text': '#1A1A1A',
+        'body-text': '#757575',
+        'light-text': '#AFAFAF',
         card: {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',
