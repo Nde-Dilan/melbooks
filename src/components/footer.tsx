@@ -9,7 +9,7 @@ export function Footer() {
         <div className="flex flex-col items-center text-center">
           <Link href="/" className="flex items-center space-x-2">
             <Icons.logo className="h-8 w-8 text-primary" />
-            <span className="text-2xl font-bold">ChapterLink</span>
+            <span className="text-2xl font-bold">MelBooks</span>
           </Link>
 
           <div className="flex flex-wrap justify-center mt-6 -mx-4">
@@ -22,7 +22,7 @@ export function Footer() {
         <hr className="my-6 border-border" />
 
         <div className="flex flex-col items-center sm:flex-row sm:justify-between">
-          <p className="text-sm text-muted-foreground">© {new Date().getFullYear()} ChapterLink. All Rights Reserved.</p>
+          <p className="text-sm text-muted-foreground">© {new Date().getFullYear()} MelBooks. All Rights Reserved.</p>
 
           <div className="flex -mx-2 mt-3 sm:mt-0">
             <Link href="https://twitter.com" target="_blank" rel="noreferrer" className="mx-2 text-muted-foreground hover:text-foreground transition-colors">
