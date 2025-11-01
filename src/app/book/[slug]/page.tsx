@@ -30,13 +30,15 @@ export async function generateMetadata(
   };
 }
 
-
-export async function generateStaticParams() {
-  const books = await getBooks();
-  return books.map((book) => ({
-    slug: book.slug,
-  }));
-}
+// This function is commented out because we are fetching data dynamically from Firestore
+// and we don't know all possible slugs at build time.
+// If you have a small, fixed number of books, you could re-enable this.
+// export async function generateStaticParams() {
+//   const books = await getBooks();
+//   return books.map((book) => ({
+//     slug: book.slug,
+//   }));
+// }
 
 export default async function BookDetailPage({ params }: Props) {
   const book = await getBookBySlug(params.slug);

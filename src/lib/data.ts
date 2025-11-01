@@ -1,56 +1,82 @@
 
+'use client';
+
 import { Book, Category } from '@/lib/types';
-import fs from 'fs/promises';
-import path from 'path';
+import { collection, getDocs, query, where, getDoc, doc } from 'firebase/firestore';
+import { firestore } from '@/firebase/firebase'; // Assuming you have a firebase setup
 
-// Note: In a real app, you'd want to use a more robust method for reading and parsing files.
-// For this example, we're keeping it simple.
-
-const booksDirectory = path.join(process.cwd(), 'content/books');
-const categoriesDirectory = path.join(process.cwd(), 'content/categories');
-
-export async function getBooks(): Promise<Book[]> {
+export async function getBooks(filters?: { category?: string }): Promise<Book[]> {
   try {
-    const filenames = await fs.readdir(booksDirectory);
-    const books = await Promise.all(
-      filenames.map(async (filename) => {
-        const filePath = path.join(booksDirectory, filename);
-        const fileContents = await fs.readFile(filePath, 'utf8');
-        return JSON.parse(fileContents) as Book;
-      })
-    );
-    return books;
+    const booksCollection = collection(firestore, 'books');
+    let booksQuery = query(booksCollection);
+
+    if (filters?.category) {
+      // First, get the category id from the slug
+      const categoriesCollection = collection(firestore, 'categories');
+      const categoryQuery = query(categoriesCollection, where('slug', '==', filters.category));
+      const categorySnapshot = await getDocs(categoryQuery);
+      if (!categorySnapshot.empty) {
+        const categoryId = categorySnapshot.docs[0].id;
+        booksQuery = query(booksCollection, where('categoryId', '==', categoryId));
+      } else {
+        return []; // No category found with that slug
+      }
+    }
+
+    const booksSnapshot = await getDocs(booksQuery);
+    const books = booksSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Book));
+    
+    // We need to get the category slug for each book
+    const categories = await getCategories();
+    const booksWithCategory = books.map(book => {
+      const category = categories.find(cat => cat.id === book.categoryId);
+      return { ...book, category: category?.slug ?? 'uncategorized' };
+    });
+
+    return booksWithCategory;
   } catch (error) {
-    console.error('Failed to read books:', error);
+    console.error('Failed to read books from Firestore:', error);
     return [];
   }
 }
 
 export async function getBookBySlug(slug: string): Promise<Book | null> {
-  try {
-    const filePath = path.join(booksDirectory, `${slug}.json`);
-    const fileContents = await fs.readFile(filePath, 'utf8');
-    return JSON.parse(fileContents) as Book;
-  } catch (error) {
-    // This can happen if the file doesn't exist, which is a valid case.
-    console.error(`Failed to read book with slug ${slug}:`, error);
-    return null;
-  }
+    try {
+        const booksCollection = collection(firestore, 'books');
+        const q = query(booksCollection, where('slug', '==', slug));
+        const querySnapshot = await getDocs(q);
+
+        if (querySnapshot.empty) {
+            return null;
+        }
+
+        const bookDoc = querySnapshot.docs[0];
+        const bookData = { id: bookDoc.id, ...bookDoc.data() } as Book;
+
+        // Get category slug
+        if (bookData.categoryId) {
+            const categoryDoc = await getDoc(doc(firestore, 'categories', bookData.categoryId));
+            if (categoryDoc.exists()) {
+                bookData.category = (categoryDoc.data() as Category).slug;
+            }
+        }
+        
+        return bookData;
+    } catch (error) {
+        console.error(`Failed to read book with slug ${slug} from Firestore:`, error);
+        return null;
+    }
 }
+
 
 export async function getCategories(): Promise<Category[]> {
   try {
-    const filenames = await fs.readdir(categoriesDirectory);
-    const categories = await Promise.all(
-      filenames.map(async (filename) => {
-        const filePath = path.join(categoriesDirectory, filename);
-        const fileContents = await fs.readFile(filePath, 'utf8');
-        return JSON.parse(fileContents) as Category;
-      })
-    );
+    const categoriesCollection = collection(firestore, 'categories');
+    const categoriesSnapshot = await getDocs(categoriesCollection);
+    const categories = categoriesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Category));
     return categories;
   } catch (error) {
-    console.error('Failed to read categories:', error);
+    console.error('Failed to read categories from Firestore:', error);
     return [];
   }
 }
