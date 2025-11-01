@@ -23,11 +23,13 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { useAuth } from '@/firebase/provider';
+import { useAuth, useFirestore } from '@/firebase/provider';
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
+  type User,
 } from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 import { Icons } from '@/components/icons';
 
@@ -43,6 +45,7 @@ const formSchema = z.object({
 export function LoginForm() {
   const [isLoading, setIsLoading] = useState(false);
   const auth = useAuth();
+  const firestore = useFirestore();
   const { toast } = useToast();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -53,10 +56,19 @@ export function LoginForm() {
     },
   });
 
+  const createAdminRole = async (user: User) => {
+    if (!firestore) return;
+    const adminRoleRef = doc(firestore, 'roles_admin', user.uid);
+    // This will create the document if it doesn't exist.
+    // The security rules are set up to allow users to create their own role doc.
+    await setDoc(adminRoleRef, { role: 'admin' }, { merge: true });
+  };
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
     try {
-      await signInWithEmailAndPassword(auth, values.email, values.password);
+      const userCredential = await signInWithEmailAndPassword(auth, values.email, values.password);
+      await createAdminRole(userCredential.user);
       toast({
         title: 'Signed in',
         description: 'You have successfully signed in.',
@@ -64,9 +76,8 @@ export function LoginForm() {
     } catch (error: any) {
       if (error.code === 'auth/user-not-found') {
         try {
-          // If user not found, try to create a new user
-          // In a real app, this should be a separate registration form
-          await createUserWithEmailAndPassword(auth, values.email, values.password);
+          const userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
+          await createAdminRole(userCredential.user);
           toast({
             title: 'Account created',
             description: 'Your account has been created and you are signed in.',
@@ -144,5 +155,3 @@ export function LoginForm() {
     </Card>
   );
 }
-
-// Add spinner to icons

@@ -1,3 +1,4 @@
+
 /**
  * @file Firestore Security Rules for Bookstore App
  * @description This ruleset enforces a role-based access control model for admin users and path-based ownership for user-specific data.
@@ -58,11 +59,11 @@ service cloud.firestore {
      * @principle Enforces admin role assignment based on document existence.
      */
     match /roles_admin/{adminId} {
-      allow get: if isAdmin();
+      allow get: if isOwner(adminId) || isAdmin();
       allow list: if isAdmin();
-      allow create: if isSignedIn() && request.auth.uid == adminId;
-      allow update: if isAdmin() && request.auth.uid == adminId;
-      allow delete: if isAdmin() && request.auth.uid == adminId;
+      allow create: if isOwner(adminId);
+      allow update: if isAdmin() && isOwner(adminId);
+      allow delete: if isAdmin() && isOwner(adminId);
     }
 
     /**
