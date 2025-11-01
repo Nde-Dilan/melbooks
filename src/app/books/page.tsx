@@ -5,7 +5,7 @@ import { BookFilters } from './_components/book-filters';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'All Books | MelBooks',
+  title: 'All Books | ChapterLink',
   description: 'Browse our collection of fiction and non-fiction books.',
 };
 

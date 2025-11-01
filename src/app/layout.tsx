@@ -7,7 +7,7 @@ import { Footer } from '@/components/footer';
 import { Providers } from '@/components/providers';
 
 export const metadata: Metadata = {
-  title: 'MelBooks - Your Trusted Bookstore',
+  title: 'ChapterLink - Your Trusted Bookstore',
   description: 'A modern, responsive bookstore application built with Next.js.',
 };
 

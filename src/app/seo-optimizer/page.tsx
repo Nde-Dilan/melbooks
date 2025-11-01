@@ -4,7 +4,7 @@ import { SeoOptimizerForm } from './_components/seo-optimizer-form';
 import { getCategories } from '@/lib/data';
 
 export const metadata: Metadata = {
-  title: 'SEO Content Optimizer | MelBooks',
+  title: 'SEO Content Optimizer | ChapterLink',
   description: 'Use our AI-powered tool to optimize your book listings for search engines.',
 };
 
