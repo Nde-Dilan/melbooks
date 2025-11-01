@@ -8,9 +8,9 @@ import { formatCurrency } from '@/lib/utils';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { ScrollArea } from './ui/scroll-area';
-import { SheetContent, SheetHeader, SheetTitle, SheetFooter } from './ui/sheet';
+import { SheetContent, SheetHeader, SheetTitle, SheetFooter, SheetTrigger } from './ui/sheet';
 import { Icons } from './icons';
-import { X } from 'lucide-react';
+import { X, ShoppingCart } from 'lucide-react';
 
 const WHATSAPP_NUMBER = "1234567890"; // Replace with your WhatsApp number
 
