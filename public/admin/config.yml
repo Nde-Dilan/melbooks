@@ -1,0 +1,38 @@
+
+backend:
+  name: git-gateway
+  branch: main # Branch to update (optional; defaults to master)
+
+media_folder: "public/images/uploads" # Media files will be stored in the repo under public/images/uploads
+public_folder: "/images/uploads" # The src attribute for uploaded media will begin with /images/uploads
+
+collections:
+  - name: "books"
+    label: "Books"
+    label_singular: "Book"
+    folder: "content/books"
+    create: true
+    slug: "{{slug}}"
+    format: "json"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Slug", name: "slug", widget: "string" }
+      - { label: "Author", name: "author", widget: "string" }
+      - { label: "Price (XAF)", name: "price", widget: "number" }
+      - { label: "Category", name: "category", widget: "relation", collection: "categories", search_fields: ["name"], value_field: "slug", display_fields: ["name"] }
+      - { label: "Stock", name: "stock", widget: "number", default: 1 }
+      - { label: "Cover Image", name: "image", widget: "image" }
+      - { label: "Description", name: "description", widget: "markdown" }
+
+  - name: "categories"
+    label: "Categories"
+    label_singular: "Category"
+    folder: "content/categories"
+    create: true
+    slug: "{{slug}}"
+    format: "json"
+    fields:
+      - { label: "Name", name: "name", widget: "string" }
+      - { label: "Slug", name: "slug", widget: "string" }
+      - { label: "Description", name: "description", widget: "markdown", optional: true }
+      - { label: "Image", name: "image", widget: "image", optional: true }

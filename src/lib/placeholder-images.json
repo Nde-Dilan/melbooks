@@ -1,3 +1,34 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "hero-background",
+      "description": "A cozy, modern library with warm lighting and rows of books.",
+      "imageUrl": "https://images.unsplash.com/photo-1526243741027-444d633d7365?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxsaWJyYXJ5JTIwaW50ZXJpb3J8ZW58MHx8fHwxNzYxODQ2OTM0fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "library interior"
+    },
+    {
+      "id": "book-1",
+      "description": "Abstract cover for a fantasy novel.",
+      "imageUrl": "https://images.unsplash.com/photo-1711185892188-13f35959d3ca?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxmYW50YXN5JTIwYm9va3xlbnwwfHx8fDE3NjE5MDc4NzJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "fantasy book"
+    },
+    {
+      "id": "book-2",
+      "description": "Minimalist cover for a non-fiction book about focus.",
+      "imageUrl": "https://images.unsplash.com/photo-1633504798516-2cf5e3f94621?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8bWluaW1hbGlzdCUyMGJvb2t8ZW58MHx8fHwxNzYxOTUxMTcyfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "minimalist book"
+    },
+    {
+      "id": "book-3",
+      "description": "A spaceship on a sci-fi book cover.",
+      "imageUrl": "https://images.unsplash.com/photo-1530519362533-b36020711133?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxzY2ktZmklMjBib29rfGVufDB8fHx8MTc2MTk2OTQ5OXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "sci-fi book"
+    },
+    {
+      "id": "book-4",
+      "description": "An old map on the cover of a history book.",
+      "imageUrl": "https://images.unsplash.com/photo-1515325595179-59cd5262ca53?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxoaXN0b3J5JTIwYm9va3xlbnwwfHx8fDE3NjE4OTQwNjR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "history book"
+    }
+  ]
 }
