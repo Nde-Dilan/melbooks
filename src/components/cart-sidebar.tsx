@@ -12,7 +12,7 @@ import { SheetContent, SheetHeader, SheetTitle, SheetFooter, SheetTrigger } from
 import { Icons } from './icons';
 import { X, ShoppingCart } from 'lucide-react';
 
-const WHATSAPP_NUMBER = "1234567890"; // Replace with your WhatsApp number
+const WHATSAPP_NUMBER = "+237651293991"; // Replace with your WhatsApp number
 
 export function CartSidebar() {
   const { cartItems, cartTotal, removeFromCart, updateQuantity, clearCart } = useCart();
@@ -20,7 +20,7 @@ export function CartSidebar() {
   const handleWhatsAppCheckout = () => {
     if (cartItems.length === 0) return;
 
-    let message = "Hello ChapterLink, I would like to order the following books:\n\n";
+    let message = "Hello MelBooks, I would like to order the following books:\n\n";
     cartItems.forEach(item => {
       message += `${item.title} (x${item.quantity}) - ${formatCurrency(item.price * item.quantity)}\n`;
     });
@@ -79,7 +79,7 @@ export function CartSidebar() {
             <div className="flex items-center justify-between w-full">
                 <span className="font-semibold">Total:</span>
                 <span className="font-bold text-lg">{formatCurrency(cartTotal)}</span>
-            </div>
+            </div> 
             <Button className="w-full" onClick={handleWhatsAppCheckout}>
               <Icons.whatsapp className="mr-2 h-5 w-5" />
               Checkout via WhatsApp

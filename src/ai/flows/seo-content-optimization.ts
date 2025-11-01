@@ -34,7 +34,7 @@ const optimizeSeoContentPrompt = ai.definePrompt({
   name: 'optimizeSeoContentPrompt',
   input: {schema: OptimizeSeoContentInputSchema},
   output: {schema: OptimizeSeoContentOutputSchema},
-  prompt: `You are an SEO expert optimizing content for a bookstore application called ChapterLink.
+  prompt: `You are an SEO expert optimizing content for a bookstore application called MelBooks.
 
   Optimize the title and description provided for better search engine visibility.
   Also, suggest relevant keywords for the book.

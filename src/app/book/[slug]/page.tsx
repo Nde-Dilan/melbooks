@@ -25,7 +25,7 @@ export async function generateMetadata(
   }
 
   return {
-    title: `${book.title} by ${book.author} | ChapterLink`,
+    title: `${book.title} by ${book.author} | MelBooks`,
     description: book.description.substring(0, 160),
   };
 }

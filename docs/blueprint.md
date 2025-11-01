@@ -1,4 +1,4 @@
-# **App Name**: ChapterLink
+# **App Name**: MelBooks
 
 ## Core Features:
 
