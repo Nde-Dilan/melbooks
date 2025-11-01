@@ -1,6 +1,4 @@
 
-'use client';
-
 import { Book, Category } from '@/lib/types';
 import { collection, getDocs, query, where, getDoc, doc } from 'firebase/firestore';
 import { firestore } from '@/firebase/firebase'; // Assuming you have a firebase setup
