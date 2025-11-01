@@ -1,0 +1,192 @@
+{
+  "entities": {
+    "Book": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Book",
+      "type": "object",
+      "description": "Represents a book in the bookstore application.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Book entity."
+        },
+        "title": {
+          "type": "string",
+          "description": "Title of the book."
+        },
+        "author": {
+          "type": "string",
+          "description": "Author of the book."
+        },
+        "price": {
+          "type": "number",
+          "description": "Price of the book in XAF.",
+          "format": "number"
+        },
+        "image": {
+          "type": "string",
+          "description": "URL of the book cover image.",
+          "format": "uri"
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the book."
+        },
+        "categoryId": {
+          "type": "string",
+          "description": "Reference to Category. (Relationship: Category 1:N Book)"
+        },
+        "stock": {
+          "type": "number",
+          "description": "Number of copies in stock.",
+          "format": "number"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "author",
+        "price",
+        "image",
+        "description",
+        "categoryId",
+        "stock"
+      ]
+    },
+    "Category": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Category",
+      "type": "object",
+      "description": "Represents a category of books.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Category entity."
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the category."
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the category."
+        },
+        "image": {
+          "type": "string",
+          "description": "URL of the category image.",
+          "format": "uri"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "description",
+        "image"
+      ]
+    },
+    "CartItem": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "CartItem",
+      "type": "object",
+      "description": "Represents an item in the shopping cart.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the CartItem entity."
+        },
+        "bookId": {
+          "type": "string",
+          "description": "Reference to Book. (Relationship: Book 1:N CartItem)"
+        },
+        "quantity": {
+          "type": "number",
+          "description": "Quantity of the book in the cart."
+        }
+      },
+      "required": [
+        "id",
+        "bookId",
+        "quantity"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/roles_admin/{adminId}",
+        "definition": {
+          "entityName": "adminRole",
+          "schema": {
+            "$ref": "#/backend/entities/adminRole"
+          },
+          "description": "Documents in this collection grant admin privileges. Authorization depends on the existence of a document with the user's UID as the document ID.",
+          "params": [
+            {
+              "name": "adminId",
+              "description": "The UID of the admin user."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/categories/{categoryId}",
+        "definition": {
+          "entityName": "Category",
+          "schema": {
+            "$ref": "#/backend/entities/Category"
+          },
+          "description": "Stores category information. Accessible to admins.",
+          "params": [
+            {
+              "name": "categoryId",
+              "description": "The unique ID of the category."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/books/{bookId}",
+        "definition": {
+          "entityName": "Book",
+          "schema": {
+            "$ref": "#/backend/entities/Book"
+          },
+          "description": "Stores book information. Accessible to admins.",
+          "params": [
+            {
+              "name": "bookId",
+              "description": "The unique ID of the book."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/cart/{cartItemId}",
+        "definition": {
+          "entityName": "CartItem",
+          "schema": {
+            "$ref": "#/backend/entities/CartItem"
+          },
+          "description": "Stores cart items for each user. Path-based ownership for user data. Includes denormalized 'bookId'.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The UID of the user."
+            },
+            {
+              "name": "cartItemId",
+              "description": "The unique ID of the cart item."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "Given the requirement to build an admin dashboard for managing books and categories and to use Firebase Authentication for admin access, the following structure is designed to ensure security, scalability, and ease of management. The structure prioritizes Authorization Independence (CRITICAL), Clarity of Intent (Debuggability), DBAC (Database Authentication and Authorization Control, No Custom Claims), Rules Are Not Filters (QAPs), and enforces Invariants.\n\n1.  **Admin Roles:** Instead of relying on custom claims, which can be complex to manage and debug, a dedicated collection `roles_admin` is used. The existence of a document with the user's UID as the document ID in this collection grants admin privileges.\n2.  **Categories:** Categories are stored in a top-level `categories` collection. This is because categories are global and not user-specific.\n3.  **Books:** Books are stored in a top-level `books` collection. Each book document contains a `categoryId` referencing the associated category. This is appropriate since the user requested CRUD operation to be performed on books by admin.\n4.  **Cart Items:** Cart items are stored under a subcollection `cart` under the `users` collection. This structure allows for easy querying of items in a user's cart. This also enforces QAPs by segregating user data.\n\n**Authorization Independence:** Authorization independence is achieved by avoiding hierarchical authorization dependencies. For example, book documents do not need to fetch the category document to validate access.\n\n**QAPs:** The structure supports secure `list` operations by structuring data to enable simple rules based on the existence of admin roles and path-based ownership for user-specific data. For example, listing books requires admin role.\n"
+  }
+}

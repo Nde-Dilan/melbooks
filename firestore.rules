@@ -1,0 +1,113 @@
+/**
+ * @file Firestore Security Rules for Bookstore App
+ * @description This ruleset enforces a role-based access control model for admin users and path-based ownership for user-specific data.
+ *
+ * Data Structure:
+ * - /roles_admin/{adminId}: Documents in this collection grant admin privileges. Authorization depends on the existence of a document with the user's UID as the document ID.
+ * - /categories/{categoryId}: Stores category information. Accessible to admins.
+ * - /books/{bookId}: Stores book information. Accessible to admins.
+ * - /users/{userId}/cart/{cartItemId}: Stores cart items for each user. Path-based ownership for user data. Includes denormalized 'bookId'.
+ *
+ * Key Security Decisions:
+ * - Admin Privileges: Determined by the presence of a document in the `roles_admin` collection with the user's UID.
+ * - Data Access:
+ *   - Books and categories are only accessible to admin users.
+ *   - Cart items are accessible only to the user who owns the cart.
+ * - Query Restrictions: Users can only list cart items that belong to them. Listing of other collections is restricted to admin users.
+ *
+ * Denormalization for Authorization:
+ * - Cart items are stored under a subcollection `/users/{userId}/cart/{cartItemId}` to easily authorize based on user ID.
+ */
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    /**
+     * @description Checks if the user is signed in.
+     */
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    /**
+     * @description Checks if the user is an admin.
+     */
+    function isAdmin() {
+      return isSignedIn() && exists(/databases/$(database)/documents/roles_admin/$(request.auth.uid));
+    }
+
+    /**
+     * @description Checks if the requested user id matches the authenticated user id.
+     */
+    function isOwner(userId) {
+        return isSignedIn() && request.auth.uid == userId;
+    }
+
+    /**
+     * @description Checks if the authenticated user is the owner of the existing document.
+     */
+    function isExistingOwner(userId) {
+        return isOwner(userId) && resource != null;
+    }
+    
+    /**
+     * @description Grants admin privileges based on the existence of a document in the `roles_admin` collection.
+     * @path /roles_admin/{adminId}
+     * @allow (create) User with UID 'user_abc' can create a role if request.auth.uid == 'user_abc'.
+     * @deny (create) User with UID 'user_xyz' cannot create a role for 'user_abc'.
+     * @principle Enforces admin role assignment based on document existence.
+     */
+    match /roles_admin/{adminId} {
+      allow get: if false;
+      allow list: if false;
+      allow create: if isSignedIn() && request.auth.uid == adminId;
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    /**
+     * @description Manages categories. Only accessible to admins.
+     * @path /categories/{categoryId}
+     * @allow (create) Admin user can create a category.
+     * @deny (create) Non-admin user cannot create a category.
+     * @principle Restricts category management to admins.
+     */
+    match /categories/{categoryId} {
+      allow get: if isAdmin();
+      allow list: if isAdmin();
+      allow create: if isAdmin();
+      allow update: if isAdmin() && resource != null;
+      allow delete: if isAdmin() && resource != null;
+    }
+
+    /**
+     * @description Manages books. Only accessible to admins.
+     * @path /books/{bookId}
+     * @allow (create) Admin user can create a book.
+     * @deny (create) Non-admin user cannot create a book.
+     * @principle Restricts book management to admins.
+     */
+    match /books/{bookId} {
+      allow get: if isAdmin();
+      allow list: if isAdmin();
+      allow create: if isAdmin();
+      allow update: if isAdmin() && resource != null;
+      allow delete: if isAdmin() && resource != null;
+    }
+
+    /**
+     * @description Manages cart items for each user. Path-based ownership for user data.
+     * @path /users/{userId}/cart/{cartItemId}
+     * @allow (create) User can create a cart item in their own cart.
+     * @deny (create) User cannot create a cart item in another user's cart.
+     * @principle Enforces user-specific cart management.
+     */
+    match /users/{userId}/cart/{cartItemId} {
+      allow get: if isOwner(userId);
+      allow list: if isOwner(userId);
+      allow create: if isOwner(userId);
+      allow update: if isExistingOwner(userId);
+      allow delete: if isExistingOwner(userId);
+    }
+  }
+}
