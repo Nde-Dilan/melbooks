@@ -108,6 +108,24 @@
         "bookId",
         "quantity"
       ]
+    },
+    "adminRole": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "adminRole",
+      "type": "object",
+      "description": "Represents an admin role in the application.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the adminRole entity."
+        },
+        "role": {
+          "type": "string",
+          "description": "The role of the user.",
+          "enum": ["admin"]
+        }
+      },
+      "required": ["id", "role"]
     }
   },
   "auth": {
