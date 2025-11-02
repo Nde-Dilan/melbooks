@@ -25,7 +25,7 @@ import {
 } from '@/components/ui/select';
 import type { Book, Category } from '@/lib/types';
 import { useFirestore } from '@/firebase/provider';
-import { doc, setDoc, addDoc, collection, serverTimestamp } from 'firebase/firestore';
+import { doc, collection } from 'firebase/firestore';
 import { setDocumentNonBlocking, addDocumentNonBlocking } from '@/firebase/non-blocking-updates';
 import { Loader2 } from 'lucide-react';
 
