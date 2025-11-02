@@ -8,7 +8,7 @@ import { CartIcon } from '@/components/cart-icon';
 import { cn } from '@/lib/utils';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
-import { Menu } from 'lucide-react';
+import { Menu, Book } from 'lucide-react';
 
 const navLinks = [
   { href: '/', label: 'Home' },
@@ -79,16 +79,16 @@ export function Header() {
             <CartIcon />
           </div>
           <nav className="flex items-center">
-            <Link href="https://twitter.com" target="_blank" rel="noreferrer">
+            <Link href="https://www.instagram.com/books_and_bloom_cmr_?igsh=MXBlN3J5eXMzNTNkOQ%3D%3D&utm_source=qr" target="_blank" rel="noreferrer" title="Fiction Instagram">
               <div className="h-9 w-9 flex items-center justify-center p-2 text-foreground/60 hover:text-foreground/80 transition-colors">
-                <Icons.twitter className="h-4 w-4" />
-                <span className="sr-only">Twitter</span>
+                <Icons.instagram className="h-4 w-4" />
+                <span className="sr-only">Fiction Instagram</span>
               </div>
             </Link>
-            <Link href="https://facebook.com" target="_blank" rel="noreferrer">
+            <Link href="https://www.instagram.com/mel_bookss?igsh=NmQ1emRoanQ5ZXhp&utm_source=qr" target="_blank" rel="noreferrer" title="Non-Fiction Instagram">
               <div className="h-9 w-9 flex items-center justify-center p-2 text-foreground/60 hover:text-foreground/80 transition-colors">
-                <Icons.facebook className="h-4 w-4" />
-                <span className="sr-only">Facebook</span>
+                 <Icons.books className="h-4 w-4" />
+                <span className="sr-only">Non-Fiction Instagram</span>
               </div>
             </Link>
           </nav>

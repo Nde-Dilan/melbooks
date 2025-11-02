@@ -26,17 +26,13 @@ export function Footer() {
           <p className="text-sm text-muted-foreground">© {new Date().getFullYear()} MelBooks. All Rights Reserved.</p>
 
           <div className="flex -mx-2 mt-3 sm:mt-0">
-            <Link href="https://twitter.com" target="_blank" rel="noreferrer" className="mx-2 text-muted-foreground hover:text-foreground transition-colors">
-              <Icons.twitter className="w-5 h-5" />
-              <span className="sr-only">Twitter</span>
-            </Link>
-            <Link href="https://facebook.com" target="_blank" rel="noreferrer" className="mx-2 text-muted-foreground hover:text-foreground transition-colors">
-              <Icons.facebook className="w-5 h-5" />
-              <span className="sr-only">Facebook</span>
-            </Link>
-            <Link href="https://instagram.com" target="_blank" rel="noreferrer" className="mx-2 text-muted-foreground hover:text-foreground transition-colors">
+             <Link href="https://www.instagram.com/books_and_bloom_cmr_?igsh=MXBlN3J5eXMzNTNkOQ%3D%3D&utm_source=qr" target="_blank" rel="noreferrer" className="mx-2 text-muted-foreground hover:text-foreground transition-colors" title="Fiction Instagram">
               <Icons.instagram className="w-5 h-5" />
-              <span className="sr-only">Instagram</span>
+              <span className="sr-only">Fiction Instagram</span>
+            </Link>
+            <Link href="https://www.instagram.com/mel_bookss?igsh=NmQ1emRoanQ5ZXhp&utm_source=qr" target="_blank" rel="noreferrer" className="mx-2 text-muted-foreground hover:text-foreground transition-colors" title="Non-Fiction Instagram">
+               <Icons.books className="w-5 h-5" />
+              <span className="sr-only">Non-Fiction Instagram</span>
             </Link>
           </div>
         </div>
