@@ -47,8 +47,8 @@ service cloud.firestore {
     /**
      * @description Checks if the authenticated user is the owner of the existing document.
      */
-    function isExistingOwner(userId) {
-        return isOwner(userId) && resource != null;
+    function isExistingOwner() {
+        return isSignedIn() && request.auth.uid == resource.data.userId;
     }
     
     /**
@@ -101,8 +101,8 @@ service cloud.firestore {
       allow get: if isOwner(userId);
       allow list: if isOwner(userId);
       allow create: if isOwner(userId);
-      allow update: if isExistingOwner(userId);
-      allow delete: if isExistingOwner(userId);
+      allow update: if isOwner(userId);
+      allow delete: if isOwner(userId);
     }
   }
 }
