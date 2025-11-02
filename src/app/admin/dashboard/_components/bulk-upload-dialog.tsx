@@ -46,7 +46,7 @@ type RowResult = {
   message: string;
 };
 
-const CSV_HEADERS = ['title', 'author', 'price', 'stock', 'description', 'categorySlug'];
+const CSV_HEADERS = ['title', 'author', 'price', 'stock', 'description', 'categorySlug', 'image'];
 
 export function BulkUploadDialog({ open, onOpenChange, onUploadComplete, categories }: BulkUploadDialogProps) {
   const firestore = useFirestore();
@@ -108,7 +108,8 @@ export function BulkUploadDialog({ open, onOpenChange, onUploadComplete, categor
         const data = papaResults.data as any[];
         const headers = papaResults.meta.fields || [];
 
-        const missingHeaders = CSV_HEADERS.filter(h => !headers.includes(h));
+        const requiredHeaders = ['title', 'author', 'price', 'stock', 'description', 'categorySlug'];
+        const missingHeaders = requiredHeaders.filter(h => !headers.includes(h));
         if (missingHeaders.length > 0) {
             setError(`CSV is missing required headers: ${missingHeaders.join(', ')}`);
             setStatus('idle');
@@ -142,7 +143,7 @@ export function BulkUploadDialog({ open, onOpenChange, onUploadComplete, categor
               description: row.description,
               categoryId,
               slug: generateSlug(title),
-              image: 'https://picsum.photos/seed/placeholder/600/400', // Default placeholder
+              image: row.image || 'https://picsum.photos/seed/placeholder/600/400', // Use provided image or default placeholder
               createdAt: serverTimestamp(),
             };
 
@@ -295,6 +296,7 @@ export function BulkUploadDialog({ open, onOpenChange, onUploadComplete, categor
                     <li><span className='font-mono font-semibold text-foreground'>stock</span>: An integer for the quantity available.</li>
                     <li><span className='font-mono font-semibold text-foreground'>description</span>: A brief summary of the book.</li>
                     <li><span className='font-mono font-semibold text-foreground'>categorySlug</span>: The URL-friendly slug for the category (e.g., 'fiction', 'non-fiction'). Must match an existing category slug in your database.</li>
+                    <li><span className='font-mono font-semibold text-foreground'>image</span>: (Optional) A full URL to the book cover image. If left blank, a placeholder will be used.</li>
                 </ul>
             </div>
             <AlertDialogFooter>
@@ -306,4 +308,3 @@ export function BulkUploadDialog({ open, onOpenChange, onUploadComplete, categor
     </>
   );
 }
-
