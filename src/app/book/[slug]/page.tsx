@@ -7,6 +7,7 @@ import { AddToCartButton } from '@/components/add-to-cart-button';
 import { WishlistButton } from '@/components/wishlist-button';
 import { Badge } from '@/components/ui/badge';
 import type { Metadata, ResolvingMetadata } from 'next';
+import { BookGrid } from '@/components/book-grid';
 
 type Props = {
   params: { slug: string };
@@ -30,22 +31,16 @@ export async function generateMetadata(
   };
 }
 
-// This function is commented out because we are fetching data dynamically from Firestore
-// and we don't know all possible slugs at build time.
-// If you have a small, fixed number of books, you could re-enable this.
-// export async function generateStaticParams() {
-//   const books = await getBooks();
-//   return books.map((book) => ({
-//     slug: book.slug,
-//   }));
-// }
-
 export default async function BookDetailPage({ params }: Props) {
   const book = await getBookBySlug(params.slug);
 
   if (!book) {
     notFound();
   }
+
+  const similarBooks = (await getBooks({ category: book.category }))
+    .filter(b => b.slug !== book.slug)
+    .slice(0, 4);
 
   return (
     <div className="container py-10 md:py-16">
@@ -79,6 +74,13 @@ export default async function BookDetailPage({ params }: Props) {
           <p className="mt-4 text-sm text-muted-foreground">{book.stock > 0 ? `${book.stock} in stock` : 'Out of stock'}</p>
         </div>
       </div>
+      
+      {similarBooks.length > 0 && (
+        <div className="mt-16 pt-12 border-t">
+          <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-8">You Might Also Like</h2>
+          <BookGrid books={similarBooks} />
+        </div>
+      )}
     </div>
   );
 }
