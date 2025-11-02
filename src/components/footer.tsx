@@ -15,6 +15,7 @@ export function Footer() {
           <div className="flex flex-wrap justify-center mt-6 -mx-4">
             <Link href="/" className="mx-4 text-sm text-muted-foreground hover:text-foreground transition-colors">Home</Link>
             <Link href="/books" className="mx-4 text-sm text-muted-foreground hover:text-foreground transition-colors">Books</Link>
+            <Link href="/seo-optimizer" className="mx-4 text-sm text-muted-foreground hover:text-foreground transition-colors">SEO Tool</Link>
             <Link href="/admin" className="mx-4 text-sm text-muted-foreground hover:text-foreground transition-colors">Admin</Link>
           </div>
         </div>

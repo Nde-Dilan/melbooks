@@ -9,21 +9,25 @@ import { Button } from '@/components/ui/button';
 import { BookList } from './_components/book-list';
 import { BookEditor } from './_components/book-editor';
 import type { Book, Category } from '@/lib/types';
+import { BulkUploadDialog } from './_components/bulk-upload-dialog';
+import { useToast } from '@/hooks/use-toast';
 
 export default function DashboardPage() {
   const { user, isUserLoading } = useUser();
   const auth = useAuth();
   const firestore = useFirestore();
   const router = useRouter();
+  const { toast } = useToast();
 
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
   const [isCreatingNew, setIsCreatingNew] = useState(false);
+  const [isBulkUploadOpen, setIsBulkUploadOpen] = useState(false);
 
   const booksQuery = useMemoFirebase(() => collection(firestore, 'books'), [firestore]);
   const categoriesQuery = useMemoFirebase(() => collection(firestore, 'categories'), [firestore]);
   
-  const { data: books, isLoading: isLoadingBooks } = useCollection<Book>(booksQuery);
-  const { data: categories, isLoading: isLoadingCategories } = useCollection<Category>(categoriesQuery);
+  const { data: books, isLoading: isLoadingBooks, error: booksError } = useCollection<Book>(booksQuery);
+  const { data: categories, isLoading: isLoadingCategories, error: categoriesError } = useCollection<Category>(categoriesQuery);
 
   useEffect(() => {
     if (!isUserLoading && !user) {
@@ -49,6 +53,10 @@ export default function DashboardPage() {
   const handleBookSaved = () => {
     setSelectedBook(null);
     setIsCreatingNew(false);
+    toast({
+        title: 'Book Saved',
+        description: 'Your changes have been saved successfully.',
+    })
   };
   
   const handleCancel = () => {
@@ -63,8 +71,21 @@ export default function DashboardPage() {
       if (selectedBook?.id === bookId) {
         setSelectedBook(null);
       }
+      toast({
+        title: 'Book Deleted',
+        description: 'The book has been successfully deleted.',
+        variant: 'destructive',
+      })
     }
   };
+
+  const handleBulkUploadComplete = () => {
+    // Optionally refetch books or rely on real-time updates
+    toast({
+        title: 'Bulk Upload Finished',
+        description: 'The book import process has completed.',
+    })
+  }
 
   if (isUserLoading || !user) {
     return (
@@ -94,6 +115,7 @@ export default function DashboardPage() {
             onSelectBook={handleSelectBook}
             onCreateNew={handleCreateNewBook}
             onDeleteBook={handleDeleteBook}
+            onBulkUpload={() => setIsBulkUploadOpen(true)}
           />
         </div>
         <div className="flex-1 overflow-y-auto">
@@ -106,6 +128,12 @@ export default function DashboardPage() {
           />
         </div>
       </div>
+      <BulkUploadDialog 
+        open={isBulkUploadOpen}
+        onOpenChange={setIsBulkUploadOpen}
+        onUploadComplete={handleBulkUploadComplete}
+        categories={categories || []}
+      />
     </div>
   );
 }

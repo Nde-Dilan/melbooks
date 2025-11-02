@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { Book } from '@/lib/types';
 import { cn } from '@/lib/utils';
-import { PlusCircle, Trash2 } from 'lucide-react';
+import { PlusCircle, Trash2, Upload } from 'lucide-react';
 
 interface BookListProps {
   books: Book[];
@@ -14,6 +14,7 @@ interface BookListProps {
   onSelectBook: (book: Book) => void;
   onCreateNew: () => void;
   onDeleteBook: (bookId: string) => void;
+  onBulkUpload: () => void;
 }
 
 export function BookList({
@@ -23,6 +24,7 @@ export function BookList({
   onSelectBook,
   onCreateNew,
   onDeleteBook,
+  onBulkUpload,
 }: BookListProps) {
   const handleDelete = (e: React.MouseEvent, bookId: string) => {
     e.stopPropagation();
@@ -32,8 +34,14 @@ export function BookList({
   return (
     <div className="flex flex-col h-full">
       <div className="p-4 border-b">
-        <h2 className="text-lg font-semibold">Books</h2>
-        <Button className="w-full mt-2" variant="outline" onClick={onCreateNew}>
+        <div className="flex justify-between items-center mb-2">
+            <h2 className="text-lg font-semibold">Books</h2>
+            <Button size="sm" variant="outline" onClick={onBulkUpload}>
+                <Upload className="mr-2 h-4 w-4"/>
+                Bulk Upload
+            </Button>
+        </div>
+        <Button className="w-full" variant="outline" onClick={onCreateNew}>
           <PlusCircle className="mr-2 h-4 w-4" />
           Create New Book
         </Button>
