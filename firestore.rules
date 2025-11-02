@@ -12,7 +12,7 @@
  * Key Security Decisions:
  * - Admin Privileges: Determined by the presence of a document in the `roles_admin` collection with the user's UID.
  * - Data Access:
- *   - Books and categories are only accessible to admin users.
+ *   - Books and categories are publicly readable but writable only by admin users.
  *   - Cart items are accessible only to the user who owns the cart.
  * - Query Restrictions: Users can only list cart items that belong to them. Listing of other collections is restricted to admin users.
  *
@@ -67,26 +67,28 @@ service cloud.firestore {
     }
 
     /**
-     * @description Manages categories. Only accessible to admins.
+     * @description Manages categories. Publicly readable, but only writable by admins.
      * @path /categories/{categoryId}
-     * @allow (create) Admin user can create a category.
-     * @deny (create) Non-admin user cannot create a category.
+     * @allow (read) Any user can read categories.
+     * @allow (write) Admin user can write a category.
+     * @deny (write) Non-admin user cannot write a category.
      * @principle Restricts category management to admins.
      */
     match /categories/{categoryId} {
-      allow read: if isAdmin();
+      allow read: if true;
       allow write: if isAdmin();
     }
 
     /**
-     * @description Manages books. Only accessible to admins.
+     * @description Manages books. Publicly readable, but only writable by admins.
      * @path /books/{bookId}
-     * @allow (create) Admin user can create a book.
-     * @deny (create) Non-admin user cannot create a book.
+     * @allow (read) Any user can read books.
+     * @allow (write) Admin user can write a book.
+     * @deny (write) Non-admin user cannot write a book.
      * @principle Restricts book management to admins.
      */
     match /books/{bookId} {
-      allow read: if isAdmin();
+      allow read: if true;
       allow write: if isAdmin();
     }
 
