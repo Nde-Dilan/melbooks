@@ -1,7 +1,18 @@
 
 import { Book, Category } from '@/lib/types';
-import { collection, getDocs, query, where, getDoc, doc } from 'firebase/firestore';
+import { collection, getDocs, query, where, getDoc, doc, Timestamp } from 'firebase/firestore';
 import { firestore } from '@/firebase/firebase'; // Assuming you have a firebase setup
+
+const processBookDoc = (doc: any) => {
+    const data = doc.data();
+    const book: Book = { id: doc.id, ...data } as Book;
+
+    // Convert Firestore Timestamps to serializable strings
+    if (data.createdAt && data.createdAt instanceof Timestamp) {
+        book.createdAt = data.createdAt.toDate().toISOString();
+    }
+    return book;
+}
 
 export async function getBooks(filters?: { category?: string }): Promise<Book[]> {
   try {
@@ -22,7 +33,7 @@ export async function getBooks(filters?: { category?: string }): Promise<Book[]>
     }
 
     const booksSnapshot = await getDocs(booksQuery);
-    const books = booksSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Book));
+    const books = booksSnapshot.docs.map(processBookDoc);
     
     // We need to get the category slug for each book
     const categories = await getCategories();
@@ -31,7 +42,14 @@ export async function getBooks(filters?: { category?: string }): Promise<Book[]>
       return { ...book, category: category?.slug ?? 'uncategorized' };
     });
 
-    return booksWithCategory;
+    // Sort by creation date, most recent first
+    return booksWithCategory.sort((a, b) => {
+        if (a.createdAt && b.createdAt) {
+            return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        }
+        return 0;
+    });
+
   } catch (error) {
     console.error('Failed to read books from Firestore:', error);
     return [];
@@ -49,7 +67,7 @@ export async function getBookBySlug(slug: string): Promise<Book | null> {
         }
 
         const bookDoc = querySnapshot.docs[0];
-        const bookData = { id: bookDoc.id, ...bookDoc.data() } as Book;
+        const bookData = processBookDoc(bookDoc);
 
         // Get category slug
         if (bookData.categoryId) {

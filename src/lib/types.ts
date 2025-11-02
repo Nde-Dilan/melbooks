@@ -10,6 +10,7 @@ export interface Book {
   category: string; // This will now be the category slug
   categoryId: string; // Keep relation to category document
   stock: number;
+  createdAt?: string; // Add createdAt as an optional string
 }
 
 export interface Category {
