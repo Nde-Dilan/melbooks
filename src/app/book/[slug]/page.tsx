@@ -1,27 +1,27 @@
-
-import { getBookBySlug, getBooks } from '@/lib/data';
-import { notFound } from 'next/navigation';
-import Image from 'next/image';
-import { formatCurrency } from '@/lib/utils';
-import { AddToCartButton } from '@/components/add-to-cart-button';
-import { WishlistButton } from '@/components/wishlist-button';
-import { Badge } from '@/components/ui/badge';
-import type { Metadata, ResolvingMetadata } from 'next';
-import { BookGrid } from '@/components/book-grid';
+import { getBookBySlug, getBooks } from "@/lib/data";
+import { notFound } from "next/navigation";
+import Image from "next/image";
+import { formatCurrency } from "@/lib/utils";
+import { AddToCartButton } from "@/components/add-to-cart-button";
+import { WishlistButton } from "@/components/wishlist-button";
+import { Badge } from "@/components/ui/badge";
+import type { Metadata, ResolvingMetadata } from "next";
+import { BookGrid } from "@/components/book-grid";
 
 type Props = {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 };
 
 export async function generateMetadata(
   { params }: Props,
   parent: ResolvingMetadata
 ): Promise<Metadata> {
-  const book = await getBookBySlug(params.slug);
+  const { slug } = await params;
+  const book = await getBookBySlug(slug);
 
   if (!book) {
     return {
-      title: 'Book Not Found',
+      title: "Book Not Found",
     };
   }
 
@@ -32,14 +32,15 @@ export async function generateMetadata(
 }
 
 export default async function BookDetailPage({ params }: Props) {
-  const book = await getBookBySlug(params.slug);
+  const { slug } = await params;
+  const book = await getBookBySlug(slug);
 
   if (!book) {
     notFound();
   }
 
   const similarBooks = (await getBooks({ category: book.category }))
-    .filter(b => b.slug !== book.slug)
+    .filter((b) => b.slug !== book.slug)
     .slice(0, 4);
 
   return (
@@ -57,27 +58,37 @@ export default async function BookDetailPage({ params }: Props) {
           />
         </div>
         <div className="flex flex-col">
-          <Badge variant="secondary" className="w-fit mb-2">{book.category}</Badge>
-          <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight">{book.title}</h1>
+          <Badge variant="secondary" className="w-fit mb-2">
+            {book.category}
+          </Badge>
+          <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight">
+            {book.title}
+          </h1>
           <p className="mt-2 text-lg text-muted-foreground">by {book.author}</p>
-          <p className="mt-6 font-bold text-3xl text-primary">{formatCurrency(book.price)}</p>
-          
+          <p className="mt-6 font-bold text-3xl text-primary">
+            {formatCurrency(book.price)}
+          </p>
+
           <div className="mt-8 prose prose-quoteless prose-neutral dark:prose-invert max-w-none">
             <p>{book.description}</p>
           </div>
 
           <div className="mt-8 flex items-center gap-4">
             <AddToCartButton book={book} showText={true} />
-            <WishlistButton book={book} className="w-12 h-12 border"/>
+            <WishlistButton book={book} className="w-12 h-12 border" />
           </div>
 
-          <p className="mt-4 text-sm text-muted-foreground">{book.stock > 0 ? `${book.stock} in stock` : 'Out of stock'}</p>
+          <p className="mt-4 text-sm text-muted-foreground">
+            {book.stock > 0 ? `${book.stock} in stock` : "Out of stock"}
+          </p>
         </div>
       </div>
-      
+
       {similarBooks.length > 0 && (
         <div className="mt-16 pt-12 border-t">
-          <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-8">You Might Also Like</h2>
+          <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-8">
+            You Might Also Like
+          </h2>
           <BookGrid books={similarBooks} />
         </div>
       )}
